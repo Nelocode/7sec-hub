@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7 SEC MEDIA | Hub de Aplicaciones</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <script src="config.js"></script>
+    <style>
+        :root {
+            --bg-main: #0a0c10;
+            --bg-card: #131722;
+            --bg-card-hover: #1a2030;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --border-glow: rgba(255, 255, 255, 0.25);
+            --text-main: #f0f3f8;
+            --text-muted: #8b949e;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 32px;
+            background: rgba(19, 23, 34, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .btn-settings {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-settings:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        /* MAIN CONTAINER */
+        main {
+            flex: 1;
+            padding: 48px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-glow);
+            background: var(--bg-card-hover);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .icon-metabase { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .icon-postiz { background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); }
+        .icon-uptime { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        .card-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-weight: 600;
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .card-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 24px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #d1d5db;
+            font-size: 0.78rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #e2e8f0;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* EMBEDDED VIEW (IFRAME) */
+        #embed-view {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-main);
+            z-index: 90;
+            flex-direction: column;
+        }
+
+        .embed-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 24px;
+            background: #11141e;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .embed-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .embed-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .embed-iframe {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+
+        /* SETTINGS MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            max-width: 520px;
+            width: 100%;
+            padding: 28px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 { font-size: 1.25rem; }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="brand" onclick="closeEmbed(); return false;">
+            <img src="logo.png" alt="7 SEC MEDIA">
+        </a>
+        <div class="header-actions">
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span>Sistemas Operativos</span>
+            </div>
+            <button class="btn-settings" onclick="openSettings()">⚙ Configurar URLs</button>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="hero">
+            <h1>Panel Central de Operaciones</h1>
+            <p>Acceso unificado a la infraestructura de marketing, analíticas y monitoreo de 7 SEC MEDIA.</p>
+        </section>
+
+        <section class="grid">
+            <!-- METABASE -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon icon-metabase">📊</div>
+                        <span class="card-tag">BI & Ads</span>
+                    </div>
+                    <h2 class="card-title">Metabase</h2>
+                    <p class="card-desc">Dashboards de Google Ads, métricas de rendimiento, atribución publicitaria y reportes de analítica avanzada.</p>
+                    <div class="card-badges">
+                        <span class="badge">Google Ads</span>
+                        <span class="badge">Conversiones</span>
+                        <span class="badge">ROAS</span>
+                        <span class="badge">SQL Dashboards</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a id="btn-metabase-direct" href="#" target="_blank" class="btn btn-primary">Abrir Panel ↗</a>
+                    <button onclick="openEmbed('metabase')" class="btn btn-secondary">Incrustar</button>
+                </div>
+            </div>
+
+            <!-- POSTIZ -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon icon-postiz">📱</div>
+                        <span class="card-tag">Social Media</span>
+                    </div>
+                    <h2 class="card-title">Postiz</h2>
+                    <p class="card-desc">Planificación, programación y publicación asistida por inteligencia artificial en todas tus redes sociales.</p>
+                    <div class="card-badges">
+                        <span class="badge">Instagram</span>
+                        <span class="badge">TikTok</span>
+                        <span class="badge">YouTube</span>
+                        <span class="badge">LinkedIn</span>
+                        <span class="badge">AI Copilot</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a id="btn-postiz-direct" href="#" target="_blank" class="btn btn-primary">Abrir Panel ↗</a>
+                    <button onclick="openEmbed('postiz')" class="btn btn-secondary">Incrustar</button>
+                </div>
+            </div>
+
+            <!-- UPTIME KUMA -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon icon-uptime">🟢</div>
+                        <span class="card-tag">Infraestructura</span>
+                    </div>
+                    <h2 class="card-title">Uptime Kuma</h2>
+                    <p class="card-desc">Monitoreo continuo 24/7 de servidores, APIs, páginas web y certificados SSL con páginas de estado de marca.</p>
+                    <div class="card-badges">
+                        <span class="badge">Monitoreo Activo</span>
+                        <span class="badge">Alertas</span>
+                        <span class="badge">Status Pages</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a id="btn-uptime-direct" href="#" target="_blank" class="btn btn-primary">Abrir Panel ↗</a>
+                    <button onclick="openEmbed('uptime')" class="btn btn-secondary">Incrustar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- VISTA INCRUSTADA -->
+    <div id="embed-view">
+        <div class="embed-bar">
+            <div class="embed-tabs">
+                <button id="tab-metabase" class="tab-btn" onclick="switchTab('metabase')">📊 Metabase</button>
+                <button id="tab-postiz" class="tab-btn" onclick="switchTab('postiz')">📱 Postiz</button>
+                <button id="tab-uptime" class="tab-btn" onclick="switchTab('uptime')">🟢 Uptime</button>
+            </div>
+            <div class="embed-controls">
+                <a id="btn-embed-external" href="#" target="_blank" class="btn-settings">Abrir en pestaña ↗</a>
+                <button class="btn-settings" onclick="closeEmbed()">✕ Volver al Hub</button>
+            </div>
+        </div>
+        <iframe id="embed-frame" class="embed-iframe" src="about:blank"></iframe>
+    </div>
+
+    <!-- MODAL DE AJUSTES -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Configuración de URLs</h3>
+                <button style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;" onclick="closeSettings()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>URL de Metabase (Analytics & Ads)</label>
+                <input type="text" id="cfg-metabase" placeholder="https://metabase.7secmedia.com">
+            </div>
+            <div class="form-group">
+                <label>URL de Postiz (Social Media)</label>
+                <input type="text" id="cfg-postiz" placeholder="https://social.7secmedia.com">
+            </div>
+            <div class="form-group">
+                <label>URL de Uptime Kuma (Monitoreo)</label>
+                <input type="text" id="cfg-uptime" placeholder="https://mappra-uptime.vz27dz.easypanel.host">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+                <button class="btn btn-secondary" onclick="closeSettings()">Cancelar</button>
+                <button class="btn btn-primary" onclick="saveSettings()">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 7 SEC MEDIA — Sistema Centralizado de Herramientas y Operaciones
+    </footer>
+
+    <script>
+        // Cargar URLs de localStorage o de config.js por defecto
+        function getUrls() {
+            return {
+                metabase: localStorage.getItem('hub_metabase') || (window.HUB_CONFIG && window.HUB_CONFIG.metabaseUrl) || "https://metabase.7secmedia.com",
+                postiz: localStorage.getItem('hub_postiz') || (window.HUB_CONFIG && window.HUB_CONFIG.postizUrl) || "https://social.7secmedia.com",
+                uptime: localStorage.getItem('hub_uptime') || (window.HUB_CONFIG && window.HUB_CONFIG.uptimeUrl) || "https://mappra-uptime.vz27dz.easypanel.host"
+            };
+        }
+
+        function updateLinks() {
+            const urls = getUrls();
+            document.getElementById('btn-metabase-direct').href = urls.metabase;
+            document.getElementById('btn-postiz-direct').href = urls.postiz;
+            document.getElementById('btn-uptime-direct').href = urls.uptime;
+        }
+
+        let currentActiveTool = 'metabase';
+
+        function openEmbed(tool) {
+            currentActiveTool = tool;
+            const urls = getUrls();
+            document.getElementById('embed-view').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'none';
+            switchTab(tool);
+        }
+
+        function switchTab(tool) {
+            currentActiveTool = tool;
+            const urls = getUrls();
+            ['metabase', 'postiz', 'uptime'].forEach(t => {
+                document.getElementById('tab-' + t).classList.remove('active');
+            });
+            document.getElementById('tab-' + tool).classList.add('active');
+            document.getElementById('embed-frame').src = urls[tool];
+            document.getElementById('btn-embed-external').href = urls[tool];
+        }
+
+        function closeEmbed() {
+            document.getElementById('embed-view').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('embed-frame').src = 'about:blank';
+        }
+
+        function openSettings() {
+            const urls = getUrls();
+            document.getElementById('cfg-metabase').value = urls.metabase;
+            document.getElementById('cfg-postiz').value = urls.postiz;
+            document.getElementById('cfg-uptime').value = urls.uptime;
+            document.getElementById('settings-modal').style.display = 'flex';
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-modal').style.display = 'none';
+        }
+
+        function saveSettings() {
+            localStorage.setItem('hub_metabase', document.getElementById('cfg-metabase').value.trim());
+            localStorage.setItem('hub_postiz', document.getElementById('cfg-postiz').value.trim());
+            localStorage.setItem('hub_uptime', document.getElementById('cfg-uptime').value.trim());
+            updateLinks();
+            closeSettings();
+            alert('¡URLs guardadas correctamente!');
+        }
+
+        // Inicializar
+        updateLinks();
+    </script>
+</body>
+</html>
