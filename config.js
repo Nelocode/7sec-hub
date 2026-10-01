@@ -4,8 +4,8 @@ window.HUB_CONFIG = {
     // URL de Metabase
     metabaseUrl: "https://mappra-metabase.vz27dz.easypanel.host",
     
-    // URL de Postiz (se actualizará cuando lo despliegues en Easypanel)
-    postizUrl: "https://social.7secmedia.com",
+    // URL de Postiz
+    postizUrl: "https://mappra-postiz.vz27dz.easypanel.host",
     
     // URL de tu Uptime Kuma ya desplegado
     uptimeUrl: "https://mappra-uptime.vz27dz.easypanel.host"
